@@ -41,7 +41,37 @@ class GetMovies extends Command
      */
     public function handle()
     {
-        $this->getPopularMovies();
+       
+        for ($i = 1; $i <= config('services.tmdb.max_pages'); $i++) {
+
+            $response = Http::get(config('services.tmdb.base_url') . '/movie/popular?region=us&api_key=' . config('services.tmdb.api_key') . '&page=' . $i);
+
+            foreach ($response->json()['results'] as $result) {
+
+                $movie = Movie::updateOrCreate(
+                    [
+                        'e_id' => $result['id'],
+                        'title' => $result['title'],
+                    ],
+                    [
+                        'description' => $result['overview'],
+                        'poster' => $result['poster_path'],
+                        'banner' => $result['backdrop_path'],
+                        'release_date' => $result['release_date'],
+                        'vote' => $result['vote_average'],
+                        'vote_count' => $result['vote_count'],
+                    ]);
+
+                $this->attachGenres($result, $movie);
+
+                $this->attachActors($movie);
+
+                $this->getImages($movie);
+
+            }//end of for each
+
+        }//end of for loop
+
         $this->getNowPlayingMovies();
         $this->getUpcomingMovies();
 
