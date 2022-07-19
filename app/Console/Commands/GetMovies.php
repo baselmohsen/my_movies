@@ -44,7 +44,7 @@ class GetMovies extends Command
        
         for ($i = 1; $i <= config('services.tmdb.max_pages'); $i++) {
 
-            $response = Http::get(config('services.tmdb.base_url') . '/movie/popular?region=us&api_key=' . config('services.tmdb.api_key') . '&page=' . $i);
+            $response = Http::get(https://api.themoviedb.org/3/movie/popular?region=us&api_key=00aad8be2a82e3a4d342cbc7d25afc24&page=1);
 
             foreach ($response->json()['results'] as $result) {
 
