@@ -42,7 +42,6 @@ class GetMovies extends Command
     public function handle()
     {
        
-        for ($i = 1; $i <= config('services.tmdb.max_pages'); $i++) {
 
             $response = Http::get(https://api.themoviedb.org/3/movie/popular?region=us&api_key=00aad8be2a82e3a4d342cbc7d25afc24&page=1);
 
@@ -70,10 +69,6 @@ class GetMovies extends Command
 
             }//end of for each
 
-        }//end of for loop
-
-        $this->getNowPlayingMovies();
-        $this->getUpcomingMovies();
 
     }//end of handle
 
