@@ -35,5 +35,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\GetGenres::class,
         Commands\GetMovies::class,
+        Commands\GetPopularMovies::class,
+
     ];
 }
