@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\Actor;
 use App\Models\Genre;
+use App\Models\Movie;
 use Illuminate\Support\Facades\Http;
 class GetPopularMovies extends Command
 {
