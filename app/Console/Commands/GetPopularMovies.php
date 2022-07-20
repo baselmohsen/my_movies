@@ -66,6 +66,64 @@ class GetPopularMovies extends Command
                 $this->getImages($movie);
 
             }//end of for each
+        
+           private function attachGenres($result, Movie $movie)
+    {
+        foreach ($result['genre_ids'] as $genreId) {
+
+            $genre = Genre::where('e_id', $genreId)->first();
+
+            $movie->genres()->syncWithoutDetaching($genre->id);
+
+        }//end of for each
+
+    }// end of attachGenres
+
+    private function attachActors(Movie $movie)
+    {
+        $response = Http::get(config('services.tmdb.base_url') . '/movie/' . $movie->e_id . '/credits?api_key=' . config('services.tmdb.api_key'));
+
+        foreach ($response->json()['cast'] as $index => $cast) {
+
+            if ($cast['known_for_department'] != 'Acting') continue;
+
+            if ($index == 12) break;
+
+            $actor = Actor::where('e_id', $cast['id'])->first();
+
+            if (!$actor) {
+
+                $actor = Actor::create([
+                    'e_id' => $cast['id'],
+                    'name' => $cast['name'],
+                    'image' => $cast['profile_path'],
+                ]);
+
+            }//end of if
+
+            $movie->actors()->syncWithoutDetaching($actor->id);
+
+        }//end of for each
+
+    }// end of attachActors
+
+    public function getImages(Movie $movie)
+    {
+        $response = Http::get(config('services.tmdb.base_url') . '/movie/' . $movie->e_id . '/images?api_key=' . config('services.tmdb.api_key'));
+
+        $movie->images()->delete();
+
+        foreach ($response->json()['backdrops'] as $index => $im) {
+
+            if ($index == 8) break;
+
+            $movie->images()->create([
+                'image' => $im['file_path']
+            ]);
+
+        }//end of for each
+
+    }// end of getImages
 
     }
 }
