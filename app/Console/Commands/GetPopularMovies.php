@@ -58,7 +58,7 @@ class GetPopularMovies extends Command
                         'vote' => $result['vote_average'],
                         'vote_count' => $result['vote_count'],
                     ]);
-
+            }
              
 
     }
